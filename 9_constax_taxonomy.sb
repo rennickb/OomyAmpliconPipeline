@@ -1,0 +1,38 @@
+#!/bin/bash -login
+
+#SBATCH --time=04:00:00					### limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --ntasks=1					### number of tasks - how many tasks (nodes) that you require (same as -n)
+#SBATCH --cpus-per-task=100				### number of CPUs (or cores) per task (same as -c)
+#SBATCH --mem=32G					### memory required per node - amount of memory (in bytes)
+#SBATCH --job-name constax				### you can give your job a name for easier identification (same as -J)
+#SBATCH -A shade-cole-bonito
+
+cd ${SLURM_SUBMIT_DIR}
+
+conda activate constax
+
+/mnt/research/bonito_lab/CONSTAX_May2020/constax.sh \
+--num_threads $SLURM_CPUS_PER_TASK \
+--mem $SLURM_MEM_PER_NODE \
+--db /mnt/ufs18/home-083/rennickb/ZachsOomyceteReferenceFile/oomyceteCurratedData.fasta \
+--train \
+--input /mnt/home/rennickb/20210402_Amplicon_PE300/clustered_OTU_ESV/otus_R1.fasta \
+--isolates /mnt/home/rennickb/CONSTAX_v2/Isolates/isolates_bonitolab.fasta \
+--isolates_query_coverage=97 \
+--isolates_percent_identity=97 \
+--high_level_db /mnt/research/bonito_lab/CONSTAX_May2020/UNITE_Fungi_tf/sh_general_release_eukaryotes_91074_RepS_04.02.2020.fasta \
+--high_level_query_coverage=85 \
+--high_level_percent_identity=60 \
+--trainfile /mnt/home/rennickb/DATABASES/training_files_eukaryotes_mock_91074_04022020/ \
+--tax /mnt/home/rennickb/CONSTAX_v2/taxonomy_assignments_euk_m08_22/ \
+--output /mnt/home/rennickb/CONSTAX_v2/taxonomy_assignments_euk_m08_22/ \
+--conf 0.8 \
+--blast \
+--msu_hpcc \
+--make_plot
+
+conda deactivate
+
+
+#/mnt/ufs18/home-083/rennickb/ZachsOomyceteReferenceFile/oomyceteCurratedData.fasta
+#/mnt/ufs18/rs-022/bonito_lab/CONSTAX_May2020/UNITE_Oomycetes_tf/sh_general_release_oomycota_RepS_04.02.2020.fasta
